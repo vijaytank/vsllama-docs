@@ -24,8 +24,7 @@ MCP integration is optional (can be enabled/disabled).
 For detailed instructions, see the [User Guide](USER_GUIDE.md).
 
 ## Install (VSIX)
-1. Download the `.vsix` from the [Latest Release](https://github.com/vijaytank/vsllama/releases).
-2. In VS Code: Extensions → `...` → **Install from VSIX...**
+1. Install from Marketplace https://marketplace.visualstudio.com/items?itemName=VijayTank.vsllama
 
 ## Configuration
 Access settings (`Ctrl+,`) and search for `VSLLama` to configure:
