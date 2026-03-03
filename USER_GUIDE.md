@@ -56,10 +56,16 @@ VSLLama supports **MCP (Model Context Protocol)** to provide the LLM with deeper
 You can add MCP servers in your `settings.json`:
 
 ```json
-"vsllama.mcpServers": {
-  "my-local-server": {
-    "command": "python",
-    "args": ["path/to/server.py"]
+{
+  "mcpServers": {
+    "NakshAstra": {
+            "command": "nakshastramcp",
+            "args": [
+                "--workspace",
+                "repo Path"
+            ]
+        }
+
   }
 }
 ```
