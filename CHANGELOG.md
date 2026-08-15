@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [2.3.0] - 2026-08-15
+
+### Added
+- **Response Model Badges & Transparency**: Below every bot message card, explicit badges display the generating model (e.g. `🤖 Response from model (Auto)` or `🤖 Response from model (Fallback from requested 🔒)`), eliminating confusion when locked models are dynamically bypassed.
+- **Model Availability TTL Caching & Notice**: 4-hour TTL caching for background model prober results (`ModelProber`). Added informational cache notice banner when provider model counts exceed 30.
+- **Manual "Clear Cache" Options**: Added manual `Clear Cache` buttons in both the Chat input toolbar and Settings Model Selection panel with instant toast feedback.
+
+### Fixed
+- **Controlled Background Prober Pacing**: Updated `ModelProber` to use gentle 350ms sequential pacing and respect provider `RateLimiter` windows, preventing API 429 throttling and UI badge flickering.
+- **Ollama Cloud Base URL Normalization**: Automatically normalizes base URLs like `https://ollama.com` to `https://api.ollama.com`.
+- **Thinking Indicator Cleanup**: Fixed stuck `.thinking-indicator` bubbles on error responses or turn completion.
+
 ## [2.2.0] - 2026-08-15
 
 ### Added

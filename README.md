@@ -3,11 +3,14 @@
 A privacy-first VS Code extension that connects to local Ollama and cloud AI providers (OpenAI, Anthropic, Gemini, NVIDIA NIM, Perplexity, Ollama Cloud, llama.cpp) for chat and coding help.  
 MCP integration is optional (can be enabled/disabled).
 
-## Features (v2.2.0)
+## Features (v2.3.0)
 - **Agentic Mode**: Autonomous task execution with tool-use (MCP) support.
 - **Planning Mode**: Generate and manage detailed architectural implementation plans.
 - **Smart Model Routing**: Automatically switch between reasoning models (planning) and coding models (execution).
 - **Expanded AI Providers**: Stream responses from Ollama, OpenAI, Anthropic, Gemini, NVIDIA NIM, Perplexity, Ollama Cloud, and llama.cpp.
+- **Response Model Badges & Transparency**: Every bot message card displays explicit badges detailing the generating model (e.g. `🤖 Response from model (Auto)` or `🤖 Response from model (Fallback from requested 🔒)`).
+- **Model Availability TTL Caching & Notice**: 4-hour TTL caching for background model prober results (`ModelProber`) with informational notice banners for long model lists (>30 models).
+- **Manual "Clear Cache" Options**: One-click `Clear Cache` buttons in Chat input toolbars and Settings panels.
 - **Dark / Light Theme System**: Dynamic theme toggle button (`🌓`) with persistent local preference storage.
 - **WCAG Accessibility & ARIA Support**: Full `aria-label` coverage on all interactive controls, high-contrast focus outlines, and an `aria-live` polite status announcer for screen readers.
 - **Interactive Error Recovery**: One-click error card dismissal and `↩️ Undo Last Message` to quickly step back conversation turns.
