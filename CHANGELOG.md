@@ -2,47 +2,65 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2.0.1] - 2026-06-16
+Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+
+## [2.2.0] - 2026-08-15
 
 ### Added
-- **Agentic Mode**: Autonomous task execution with MCP tool integration and user approval for tool execution
-- **Planning Mode**: Generate structured implementation plans for architectural decisions
-- **Smart Model Routing**: Automatically switch between reasoning models (planning) and coding models (execution)
-- **Expanded AI Providers**: Added support for NVIDIA NIM, Perplexity, Ollama Cloud, and llama.cpp
-- **AI-Driven Critique Loop**: Optional post-change self-verification using project's build system/test tooling
-- **Streaming Retry Resilience**: Automatic retry handling for network blips and cold-starts on all streaming providers
-- **JSON Parsing Repair**: Automatic correction of malformed JSON outputs from LLM providers
-- **Collapsible Reasoning Blocks**: AI thinking processes (`<think>` tags) now render in expandable details sections
-- **Enhanced Tool Call Visualization**: System tool calls and results grouped in expandable sections for debugging
-- **Pulsing Status Indicator**: Real-time feedback showing AI status (starting, thinking, generating, executing tools, resuming)
-- **Interactive Onboarding**: Guided setup for first-time users with provider selection
+- **Dynamic Model Search & Natural Sorting**: Real-time live model search filtering in the Settings panel when provider model list length > 10, with natural alphanumeric sorting across Settings cards and toolbar dropdowns.
+- **Staggered Background Model Prober (`ModelProber`)**: Staggered background accessibility checks for cloud providers returning > 5 models to dynamically render `🔒` lock badges in the UI and populate `lockedModelsCache`.
+- **Centralized Error Redaction (`sanitizeErrorMessage`)**: Centralized utility in `src/utils/errorSanitizer.ts` to redact Bearer tokens, API keys (`sk-`, `nvapi-`, `AIzaSy`, `pplx-`), and local OS file paths across all 8 AI clients.
+- **MCP Transport Adapters (`normalizeTransport`)**: Safe, explicit transport normalization for stdio, SSE, StreamableHTTP, and WebSocket transports.
+- **Abortable RetryWrapper & Timeout Helper (`createTimeoutSignal`)**: Added `signal?: AbortSignal` support and `abortableSleep` to guarantee instant prompt cancellations during backoff delays.
 
-### Improved
-- **UI/UX Enhancements**: Long messages (5+ lines) collapse by default to save screen space
-- **Rate Limiting**: Global and per-provider sliding-window configuration for API rate limit management
-- **Error Recovery**: One-click retry buttons and settings shortcuts for actionable error handling
-- **MCP Tool Integration**: Full support with connection pooling and idle timeout management
-- **Response Caching**: Performance optimized with built-in caching mechanisms
-- **Git Commit Generation**: Enhanced context-awareness for staged and unstaged changes
+### Refactored & Cleaned
+- **ESLint Compliance**: Enforced strict `curly` brace formatting across `chatService.ts` and `sessionManager.ts`, resolving all lint warnings (0 errors, 0 warnings).
+- **Robust Tool Call Extraction**: Upgraded `extractToolCalls` to parse `[TOOL: ...]` blocks anywhere in model text output with support for string escaping, missing parentheses, and relaxed JSON format healing.
+- **Webview Message Handling & XSS Safety**: Enforced strict `escapeHtml` sanitization across dynamic DOM elements in webview media and async routing for `approvePlan`, `continueChat`, `testApiKey`, and `refreshMcp`.
+- **Node Engine Specifications**: Specified `"engines": { "vscode": "^1.107.0", "node": ">=18.0.0" }`.
 
-### Configuration
-- Added `planningModel` and `executionModel` settings for smart routing
-- Added `critiqueLoop.enabled` and `critiqueLoop.maxRetries` for self-verification
-- Added per-provider rate limiting configuration
-- All settings accessible from Environment tab without file editing
+### Fixed
+- **Cloud Provider Streaming Errors**: Fixed silent hangs, empty response errors, and infinite loops across NVIDIA NIM, OpenAI, Perplexity, Anthropic, Gemini, and Ollama Cloud by inspecting SSE line frames for `data.error` / `data.detail` payloads and throwing descriptive error messages immediately.
+- **HTTP 403 & 402 Error Handling**: Added dedicated status code handlers for `403 Forbidden` (subscription/plan required) and `402 Payment Required` (credits required).
+- **Auto Mode Selection**: Automatically excluded dynamically locked (`🔒`) models from `Auto` mode heuristic selectors (`heuristicallySelectFastModel` and `heuristicallySelectHeavyModel`).
+
+## [2.1.0] - 2026-08-13
+
+### Added
+- **Theme & Visual System**: Dark/light theme toggle button (`🌓`) in chat header with persistent user preference storage.
+- **Accessibility & ARIA Compliance**: Full WCAG compliance with `aria-label` coverage across all controls and an `aria-live` screen reader status announcer (`polite`).
+- **Interactive Error Recovery**: Structured error card UI featuring error dismissal (`✕`) and a one-click `↩️ Undo Last Message` button to revert context turns.
+- **Streaming Progress Bar**: Visual indeterminate progress animation during model streaming and tool execution.
+- **Tool Call Visual Classification**: Distinct color-coded borders and type icons for tool calls (📖 Read, ✏️ Write, 🚀 Exec, 🗑️ Delete) with syntax highlighting for code output.
+- **Byte-Pair Encoding Tokenization**: Real BPE token count estimation using `gpt-tokenizer`.
+- **MCP Auto-Reconnect**: Automatic transport disconnect detection and exponential backoff auto-reconnect (up to 5 retries).
+- **Audit Logging**: Workspace-bound structured audit logging in `system_events/audit.log` with 10 MB log rotation.
+- **CI Pipeline**: Automated GitHub Actions workflow covering type-checking, linting, pretest builds, and security audits.
+
+### Changed
+- **Security Hardening**: Refactored command execution to use argv arrays with `shell: false`, eliminating shell injection risks.
+- **Cache Optimizations**: Created dedicated `modelListCache` with a 15-minute TTL to reduce redundant provider model queries.
+- **Session Manager Persistence**: Directly backed by VS Code global state.
+
+## [2.0.0] - 2026-05-04
+
+### Added
+- **Major Architectural Overhaul**: Transitioned to a service-oriented architecture with dedicated `ChatService`, `MessageHandler`, `SessionManager`, and `PlanManager`.
+- **Agentic Mode**: Autonomous task execution with tool-use (MCP) support.
+- **Planning Mode**: Generate and manage detailed architectural implementation plans.
+- **Expanded AI Providers**: Added support for NVIDIA NIM, Perplexity, Ollama Cloud, and llama.cpp.
+- **Smart Model Routing**: Automatic selection of reasoning vs. coding models based on task context.
+- **Comprehensive Test Suite**: Test coverage across core services, AI clients, and utilities.
 
 ## [1.0.0] - 2026-02-24
 
 ### Added
-- Sidebar chat view with streaming responses from Ollama
-- MCP Tool Integration (Phase 1)
-- Code Autocomplete (Inline Ghost Text)
-- Smart Git Commit Message Generation
-- Code Actions: Explain, Fix, Generate Tests, Add Docs, Generate Code
-- Support for Ollama, OpenAI, Anthropic, and Gemini providers
-- Secure API key storage via VS Code SecretStorage
-- Interactive webview with collapsible sections
-- Full MCP server support with stdio connections
+- Sidebar chat view with streaming responses from Ollama, OpenAI, Anthropic, and Gemini.
+- MCP Tool Integration (Phase 1).
+- Code Autocomplete (Inline Ghost Text).
+- Smart Git Commit Message Generation.
+- Code Actions: Explain, Fix, Generate Tests, Add Docs, Generate Code.
+- Secure API key storage via VS Code SecretStorage.
 
 ---
 
@@ -50,7 +68,9 @@ All notable changes to this project will be documented in this file.
 
 | Version | Release Date | Major Changes |
 |---------|--------------|---------------|
-| 2.0.1 | 2026-06-16 | Agentic mode, planning, smart routing, expanded providers |
+| 2.2.0 | 2026-08-15 | Dynamic model search, ModelProber, error sanitizer, timeout signals |
+| 2.1.0 | 2026-08-13 | Theme toggle (`🌓`), WCAG ARIA compliance, Undo Last Message, BPE tokenization, MCP auto-reconnect, audit logging |
+| 2.0.0 | 2026-05-04 | Service architecture, Agentic & Plan modes, expanded cloud AI providers |
 | 1.0.0 | 2026-02-24 | Initial release with core features |
 
 ---
